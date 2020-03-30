@@ -25,10 +25,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, NaverMap.OnCameraIdleListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, NaverMap.OnCameraChangeListener, NaverMap.OnCameraIdleListener {
 
     private NaverMap naverMap;
     private List<Marker> markerList = new ArrayList<Marker>();
+    private boolean isCameraAnimated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         UiSettings uiSettings = naverMap.getUiSettings();
         uiSettings.setLocationButtonEnabled(true);
 
+        naverMap.addOnCameraChangeListener(this);
         naverMap.addOnCameraIdleListener(this);
 
         LatLng mapCenter = naverMap.getCameraPosition().target;
@@ -55,9 +57,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    public void onCameraChange(int reason, boolean animated) {
+        isCameraAnimated = animated;
+    }
+
+    @Override
     public void onCameraIdle() {
-        LatLng mapCenter = naverMap.getCameraPosition().target;
-        fetchStoreSale(mapCenter.latitude, mapCenter.longitude, 5000);
+        if (isCameraAnimated) {
+            LatLng mapCenter = naverMap.getCameraPosition().target;
+            fetchStoreSale(mapCenter.latitude, mapCenter.longitude, 5000);
+        }
     }
 
     private void fetchStoreSale(double lat, double lng, int m) {
