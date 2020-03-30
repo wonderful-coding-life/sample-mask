@@ -6,3 +6,9 @@ https://app.swaggerhub.com/apis-docs/Promptech/public-mask-info/20200307-oas3#/S
 
 안드로이드 앱에 네이버 지도 추가하기
 http://blog.naver.com/ndskr/221880849812
+
+# Steps
+- 안드로이드 프로젝트 셋업
+- 네이버 지도 추가하기
+- 마스크 Open API 연동하기
+- 네이버 지도 버그 회피하기
