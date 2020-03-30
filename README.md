@@ -9,8 +9,13 @@ http://blog.naver.com/ndskr/221880849812
 
 
 ### 네이버 지도 추가하기
-네이버 클라우드 콘솔에서 생성한 클라이언트 아이디를 Manifest.xml에 meta-data로 추가합니다.
-아래 value 영역을 수정합니다.
+네이버 클라우드 콘솔에서 추가한 앱의 인증정보(Client ID)를 Android Manifest.xml의 application element 내에 meta-data로 추가
 ```
 <meta-data android:name="com.naver.maps.map.CLIENT_ID" android:value="1xwgvvq8ps" />
+```
+Android Manifest.xml에 필요 권한 추가합니다. OpenAPI를 호출하기 위해 INTERNET 권한과, 네이버 지도에서 현재 위치 검색을 위해 LOCATION 권한이 필요합니다.
+```
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 ```
