@@ -26,7 +26,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, NaverMap.OnCameraChangeListener, NaverMap.OnCameraIdleListener {
+    private static final int ACCESS_LOCATION_PERMISSION_REQUEST_CODE = 100;
 
+    private FusedLocationSource locationSource;
     private NaverMap naverMap;
     private List<Marker> markerList = new ArrayList<Marker>();
     private boolean isCameraAnimated = false;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
 
-        FusedLocationSource locationSource = new FusedLocationSource(this, 100);
+        locationSource = new FusedLocationSource(this, ACCESS_LOCATION_PERMISSION_REQUEST_CODE);
         naverMap.setLocationSource(locationSource);
         UiSettings uiSettings = naverMap.getUiSettings();
         uiSettings.setLocationButtonEnabled(true);
@@ -54,6 +56,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         LatLng mapCenter = naverMap.getCameraPosition().target;
         fetchStoreSale(mapCenter.latitude, mapCenter.longitude, 5000);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case ACCESS_LOCATION_PERMISSION_REQUEST_CODE:
+                locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                return;
+        }
     }
 
     @Override
