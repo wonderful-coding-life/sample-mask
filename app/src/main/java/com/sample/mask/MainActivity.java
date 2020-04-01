@@ -25,6 +25,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/*
+ * Full source code is available at github https://github.com/xhiftcorp/sample-mask
+ */
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, NaverMap.OnCameraChangeListener, NaverMap.OnCameraIdleListener {
     private static final int ACCESS_LOCATION_PERMISSION_REQUEST_CODE = 100;
 
