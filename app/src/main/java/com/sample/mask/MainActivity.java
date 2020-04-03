@@ -7,6 +7,7 @@ import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.MapFragment;
@@ -67,13 +68,17 @@ public class MainActivity extends AppCompatActivity implements NaverMap.OnMapCli
         fetchStoreSale(mapCenter.latitude, mapCenter.longitude, 5000);
 
         infoWindow = new InfoWindow();
-        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(this) {
+        infoWindow.setAdapter(new InfoWindow.DefaultViewAdapter(this) {
             @NonNull
             @Override
-            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+            protected View getContentView(@NonNull InfoWindow infoWindow) {
                 Marker marker = infoWindow.getMarker();
                 Store store = (Store) marker.getTag();
-                return store.name + "\n" + store.stock_at;
+                View view = View.inflate(MainActivity.this, R.layout.view_info_window, null);
+                ((TextView) view.findViewById(R.id.name)).setText(store.name);
+                ((TextView) view.findViewById(R.id.stock)).setText(store.remain_stat);
+                ((TextView) view.findViewById(R.id.time)).setText(store.stock_at);
+                return view;
             }
         });
     }
