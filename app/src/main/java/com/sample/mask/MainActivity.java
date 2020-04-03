@@ -6,13 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
+import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 
@@ -29,11 +32,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Full source code is available at github https://github.com/xhiftcorp/sample-mask
  */
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, NaverMap.OnCameraChangeListener, NaverMap.OnCameraIdleListener {
+public class MainActivity extends AppCompatActivity implements NaverMap.OnMapClickListener, Overlay.OnClickListener, OnMapReadyCallback, NaverMap.OnCameraChangeListener, NaverMap.OnCameraIdleListener {
     private static final int ACCESS_LOCATION_PERMISSION_REQUEST_CODE = 100;
 
     private FusedLocationSource locationSource;
     private NaverMap naverMap;
+    private InfoWindow infoWindow;
     private List<Marker> markerList = new ArrayList<Marker>();
     private boolean isCameraAnimated = false;
 
@@ -57,9 +61,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         naverMap.addOnCameraChangeListener(this);
         naverMap.addOnCameraIdleListener(this);
+        naverMap.setOnMapClickListener(this);
 
         LatLng mapCenter = naverMap.getCameraPosition().target;
         fetchStoreSale(mapCenter.latitude, mapCenter.longitude, 5000);
+
+        infoWindow = new InfoWindow();
+        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(this) {
+            @NonNull
+            @Override
+            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                Marker marker = infoWindow.getMarker();
+                Store store = (Store) marker.getTag();
+                return store.name + "\n" + store.stock_at;
+            }
+        });
     }
 
     @Override
@@ -110,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (result.stores != null && result.stores.size() > 0) {
             for (Store store : result.stores) {
                 Marker marker = new Marker();
+                marker.setTag(store);
                 marker.setPosition(new LatLng(store.lat, store.lng));
                 if ("plenty".equalsIgnoreCase(store.remain_stat)) {
                     marker.setIcon(OverlayImage.fromResource(R.drawable.marker_green));
@@ -122,9 +139,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 marker.setAnchor(new PointF(0.5f, 1.0f));
                 marker.setMap(naverMap);
+                marker.setOnClickListener(this);
                 markerList.add(marker);
             }
         }
+    }
+
+    @Override
+    public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
+        infoWindow.close();
+    }
+
+    @Override
+    public boolean onClick(@NonNull Overlay overlay) {
+        if (overlay instanceof Marker) {
+            Marker marker = (Marker) overlay;
+            if (marker.getInfoWindow() != null) {
+                infoWindow.close();
+            } else {
+                infoWindow.open(marker);
+            }
+            return true;
+        }
+        return false;
     }
 
     private void resetMarkerList() {
