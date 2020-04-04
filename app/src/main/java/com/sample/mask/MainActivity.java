@@ -152,7 +152,9 @@ public class MainActivity extends AppCompatActivity implements NaverMap.OnMapCli
 
     @Override
     public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
-        infoWindow.close();
+        if (infoWindow.getMarker() != null) {
+            infoWindow.close();
+        }
     }
 
     @Override
