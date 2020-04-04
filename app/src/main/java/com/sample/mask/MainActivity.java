@@ -76,8 +76,20 @@ public class MainActivity extends AppCompatActivity implements NaverMap.OnMapCli
                 Store store = (Store) marker.getTag();
                 View view = View.inflate(MainActivity.this, R.layout.view_info_window, null);
                 ((TextView) view.findViewById(R.id.name)).setText(store.name);
-                ((TextView) view.findViewById(R.id.stock)).setText(store.remain_stat);
-                ((TextView) view.findViewById(R.id.time)).setText(store.stock_at);
+                if ("plenty".equalsIgnoreCase(store.remain_stat)) {
+                    ((TextView) view.findViewById(R.id.stock)).setText("100개 이상");
+                } else if ("some".equalsIgnoreCase(store.remain_stat)) {
+                    ((TextView) view.findViewById(R.id.stock)).setText("30개 이상 100개 미만");
+                } else if ("fiew".equalsIgnoreCase(store.remain_stat)) {
+                    ((TextView) view.findViewById(R.id.stock)).setText("2개 이상 30개 미만");
+                } else if ("empty".equalsIgnoreCase(store.remain_stat)) {
+                    ((TextView) view.findViewById(R.id.stock)).setText("1개 이하");
+                } else if ("break".equalsIgnoreCase(store.remain_stat)) {
+                    ((TextView) view.findViewById(R.id.stock)).setText("판매중지");
+                } else {
+                    ((TextView) view.findViewById(R.id.stock)).setText(null);
+                }
+                ((TextView) view.findViewById(R.id.time)).setText("입고 " + store.stock_at);
                 return view;
             }
         });
