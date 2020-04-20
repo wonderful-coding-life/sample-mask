@@ -3,9 +3,13 @@ package com.sample.mask;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -52,6 +56,27 @@ public class MainActivity extends AppCompatActivity implements NaverMap.OnMapCli
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.show_list:
+                Intent intent = new Intent(this, StoreActivity.class);
+                LatLng mapCenter = naverMap.getCameraPosition().target;
+                intent.putExtra("longitude", mapCenter.longitude);
+                intent.putExtra("latitude", mapCenter.latitude);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
 
@@ -80,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NaverMap.OnMapCli
                     ((TextView) view.findViewById(R.id.stock)).setText("100개 이상");
                 } else if ("some".equalsIgnoreCase(store.remain_stat)) {
                     ((TextView) view.findViewById(R.id.stock)).setText("30개 이상 100개 미만");
-                } else if ("fiew".equalsIgnoreCase(store.remain_stat)) {
+                } else if ("few".equalsIgnoreCase(store.remain_stat)) {
                     ((TextView) view.findViewById(R.id.stock)).setText("2개 이상 30개 미만");
                 } else if ("empty".equalsIgnoreCase(store.remain_stat)) {
                     ((TextView) view.findViewById(R.id.stock)).setText("1개 이하");

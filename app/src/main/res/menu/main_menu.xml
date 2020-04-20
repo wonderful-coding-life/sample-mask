@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/show_list"
+        android:icon="@drawable/ic_list"
+        android:title="판매처 목록"
+        app:showAsAction="ifRoom"/>
+</menu>
