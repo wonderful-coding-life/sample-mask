@@ -57,6 +57,8 @@ public class StoreActivity extends AppCompatActivity {
     private void updateList(StoreSaleResult result) {
         if (result.stores != null && result.stores.size() > 0) {
             Collections.sort(result.stores);
+            //Collections.sort(result.stores, new Store.NameSorter());
+            //Collections.sort(result.stores, new Store.StockAtSorter());
             StoreAdapter adapter = new StoreAdapter(result.stores);
             storeListView.setAdapter(adapter);
         }

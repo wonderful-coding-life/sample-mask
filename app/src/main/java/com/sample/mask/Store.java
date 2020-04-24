@@ -2,6 +2,8 @@ package com.sample.mask;
 
 import com.naver.maps.map.overlay.OverlayImage;
 
+import java.util.Comparator;
+
 public class Store implements Comparable<Store> {
     public String addr;
     public String code;
@@ -32,5 +34,21 @@ public class Store implements Comparable<Store> {
     @Override
     public int compareTo(Store other) {
         return getAmount() - other.getAmount();
+    }
+
+    public static class NameSorter implements Comparator<Store> {
+        public int compare(Store store1, Store store2) {
+            store1.name = (store1.name == null) ? "" : store1.name;
+            store2.name = (store2.name == null) ? "" : store2.name;
+            return store1.name.compareTo(store2.name);
+        }
+    }
+
+    public static class StockAtSorter implements Comparator<Store> {
+        public int compare(Store store1, Store store2) {
+            store1.stock_at = (store1.stock_at == null) ? "" : store1.stock_at;
+            store2.stock_at = (store2.stock_at == null) ? "" : store2.stock_at;
+            return store1.stock_at.compareTo(store2.stock_at);
+        }
     }
 }
